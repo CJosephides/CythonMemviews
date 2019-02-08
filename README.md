@@ -73,4 +73,6 @@ The example `identity_2d_long` shows how we can dynamically allocate space for a
 
 **Note: unlike modern C, we have to explicitly cast the void pointer return by malloc to the type that we are assigning.**
 
-Be very careful with the imports and cimports.
+Be very careful with the imports and cimports. Also, don't forget to type the index cdefs.
+
+The current implementation, even with disabled check directives, is not quite as fast as numpy (1.4 vs 1.8 usec). I'm not sure why.
