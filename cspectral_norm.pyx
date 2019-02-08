@@ -4,7 +4,7 @@ cspectral_norm.py
 Cythonized implementation of spectral norm calculations.
 """
 
-from cython cimport cdivision
+from cython cimport cdivision, boundscheck, wraparound
 from array import array
 from math import sqrt
 
@@ -16,15 +16,21 @@ cdef inline double A(int i, int j):
     return 1.0 / (((i + j) * (i + j + 1) >> 1) + i + 1)
 
 
-def A_times_u(u, v):
+@boundscheck(False)
+@wraparound(False)
+def A_times_u(double[::1] u, double[::1] v):
     """
     v = Au
 
     where A is NxN,
           u, v are Nx1
     """
+    
+    cdef:
+        int n, i, j
+        double partial_sum
 
-    n = len(u)
+    n = u.shape[0]
 
     for i in range(n):
         partial_sum = 0.
@@ -34,14 +40,20 @@ def A_times_u(u, v):
         v[i] = partial_sum
 
 
-def At_times_u(u, v):
+@boundscheck(False)
+@wraparound(False)
+def At_times_u(double[::1] u, double[::1] v):
     """
     v = A^{T}u
 
     where AT^{T} is the conjugate transpose of A.
     """
 
-    n = len(u)
+    cdef:
+        int n, i, j
+        double partial_sum
+
+    n = u.shape[0]
 
     for i in range(n):
         partial_sum = 0.

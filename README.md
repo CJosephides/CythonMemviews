@@ -116,3 +116,16 @@ decorating the function with `cdivision(True)`, which tells the compiler not to 
 about this eventuality.
 
 The total runtime is now 0.134 seconds. This is an order of magnitude faster than pure python and about four times faster than our naive cython code.
+
+### Using typed memoryviews
+
+We modified `A_times_u` by declaring the `u` and `v` arguments as one-dimensional, C-contiguous, typed memory views.
+Further, we provided type information for the function's variables.
+
+This modification reduces our runtime by another order of magnitude: 0.015 seconds. We could just leave it here, by why stop now?
+
+## General remarks
+
+A nice feedback loop when working with Cython is to annotate the generated C code by passing `annotate=True` to the
+`cythonize` call in the setup file. We then inspect the highlighted lines and take steps to optimize them.
+We clear out the build, recompile, and repeat.
