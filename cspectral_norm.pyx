@@ -5,6 +5,7 @@ Cythonized implementation of spectral norm calculations.
 """
 
 from cython cimport cdivision, boundscheck, wraparound
+#from numpy import array  # very slow!
 from array import array
 from math import sqrt
 
@@ -18,7 +19,7 @@ cdef inline double A(int i, int j):
 
 @boundscheck(False)
 @wraparound(False)
-def A_times_u(double[::1] u, double[::1] v):
+cdef void A_times_u(double[::1] u, double[::1] v):
     """
     v = Au
 
@@ -42,7 +43,7 @@ def A_times_u(double[::1] u, double[::1] v):
 
 @boundscheck(False)
 @wraparound(False)
-def At_times_u(double[::1] u, double[::1] v):
+cdef void At_times_u(double[::1] u, double[::1] v):
     """
     v = A^{T}u
 
@@ -63,7 +64,7 @@ def At_times_u(double[::1] u, double[::1] v):
         v[i] = partial_sum
 
 
-def B_times_u(u, out, tmp):
+cdef void B_times_u(double[::1] u, double[::1] out, double[::1] tmp):
     """
     Bu = A^{T}Au
 
@@ -80,9 +81,12 @@ def spectral_norm(n):
     The spectral norm of an infinite matrix A truncated to n rows and n columns.
     """
 
+    #u = np.ones(n, dtype=np.float64)
     u = array("d", [1.0] * n)
+    #v = np.ones(n, dtype=np.float64)
     v = array("d", [1.0] * n)
     tmp = array("d", [0.0] * n)
+    #tmp = np.zeros(n, dtype=np.float64)
 
     # Use the power iteration to converge u to the principal eigenvector.
     for _ in range(N_POWER_ITER):

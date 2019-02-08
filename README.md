@@ -124,6 +124,20 @@ Further, we provided type information for the function's variables.
 
 This modification reduces our runtime by another order of magnitude: 0.015 seconds. We could just leave it here, by why stop now?
 
+### Using numpy
+
+We can use numpy to manage our initial arrays. However, I find that the overhead of importing numpy
+almost ten times larger than running the entire calculation!
+
+Here, using `array.array` is alright, particularly because we don't use multi-dimensional arrays.
+
+### cdef
+
+We gain very little by converting `A_times_u` and `At_times_u` to `cdef`ed functions.
+
+Note, however, that our Cython code can still call these functions, even though they will
+not be available to python.
+
 ## General remarks
 
 A nice feedback loop when working with Cython is to annotate the generated C code by passing `annotate=True` to the
