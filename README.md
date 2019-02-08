@@ -138,6 +138,13 @@ We gain very little by converting `A_times_u` and `At_times_u` to `cdef`ed funct
 Note, however, that our Cython code can still call these functions, even though they will
 not be available to python.
 
+### Dynamical array allocation
+
+We gain very little by dynamically allocating the `u`, `v`, and `tmp` arrays, and we also have to remember to free this
+memory when we are done with it!
+
+We are already using the efficient `array.array` through the buffer protocol, so dynamically allocating here really is unnecessary.
+
 ## General remarks
 
 A nice feedback loop when working with Cython is to annotate the generated C code by passing `annotate=True` to the

@@ -5,9 +5,9 @@ Cythonized implementation of spectral norm calculations.
 """
 
 from cython cimport cdivision, boundscheck, wraparound
-#from numpy import array  # very slow!
 from array import array
 from math import sqrt
+from libc.stdlib cimport malloc, free
 
 N_POWER_ITER = 10
 
@@ -75,18 +75,23 @@ cdef void B_times_u(double[::1] u, double[::1] out, double[::1] tmp):
     A_times_u(u, tmp)
     At_times_u(tmp, out)
 
-
-def spectral_norm(n):
+@boundscheck(False)
+def spectral_norm(int n):
     """
     The spectral norm of an infinite matrix A truncated to n rows and n columns.
     """
 
-    #u = np.ones(n, dtype=np.float64)
+    #cdef double *u_arr = <double*>malloc(n * sizeof(double))
+    #cdef double *v_arr = <double*>malloc(n * sizeof(double))
+    #cdef double *tmp_arr = <double*>malloc(n * sizeof(double))
+
+    #cdef double[::1] u = <double[:n]>u_arr
+    #cdef double[::1] v = <double[:n]>v_arr
+    #cdef double[::1] tmp = <double[:n]>tmp_arr
+
     u = array("d", [1.0] * n)
-    #v = np.ones(n, dtype=np.float64)
     v = array("d", [1.0] * n)
     tmp = array("d", [0.0] * n)
-    #tmp = np.zeros(n, dtype=np.float64)
 
     # Use the power iteration to converge u to the principal eigenvector.
     for _ in range(N_POWER_ITER):
@@ -96,8 +101,17 @@ def spectral_norm(n):
     # Finally, calculate the principal eigenvalue.
     vBv = vv = 0
 
+    #cdef int i
+    #for i in range(n):
+    #    vBv += u[i] * v[i]
+    #    vv += v[i] * v[i]
+
     for ue, ve in zip(u, v):
         vBv += ue * ve
         vv  += ve *ve
+
+    #free(u_arr)
+    #free(v_arr)
+    #free(tmp_arr)
 
     return sqrt(vBv / vv)
