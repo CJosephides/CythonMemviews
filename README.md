@@ -27,6 +27,12 @@ na.sum()
 
 for some, very strange, reason.
 
+### Ellipsis
+
+We have to be careful to use the ellipsis operator, as we did with `mv[...] = math.pi` when we wish to modify
+a memory view in place. To do otherwise -- for example `mv = math.pi` -- would mean that we wish to make a copy
+of the data and set to pi. This follows the convention of standard python lists.
+
 ### Trading safety for performance
 
 The `cython.boundscheck` and `cython.wraparound` decorators respectively absolve Cython from doing explicit checks on
@@ -39,3 +45,24 @@ header:
 ```
 
 or globally enable these at compile time through the `--directive` flag.
+
+### Strided vs contiguous arrays
+
+The syntax
+
+```
+def summer(double[::1] mv)
+```
+
+declares double as a C-contiguous (or **column-major**) array. It is usually more efficient to work with C-contiguous
+arrays, since this is the numpy standard. It is also required when working with external C/C++ libraries. If not
+specified, and had we instead simply used `double[:] mv`, then we would be declaring mv to be a fully-strded array,
+which is slower to work with.
+
+To declare a multidimensional array as a C-contiguous array, use, for example:
+
+```
+double[:, :, ::1]
+```
+
+for a three-dimensional array.

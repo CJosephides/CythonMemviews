@@ -2,11 +2,12 @@
 memviews.pyx
 """
 
+import math
 import cython
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def summer(double[:] mv):
+def summer(double[::1] mv):
     """
     Sums the array.
     """
@@ -20,3 +21,13 @@ def summer(double[:] mv):
         arr_sum += mv[i]
 
     return arr_sum
+
+
+def make_delicious_pi(double[::1] mv):
+    """
+    Make the entire double array delicious.
+
+    Modifies the array in-place.
+    """
+
+    mv[...] = math.pi
