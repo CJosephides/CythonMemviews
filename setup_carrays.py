@@ -1,12 +1,12 @@
 """
-setup_memviews.py
+setup_carrays.py
 """
 
 from distutils.core import setup, Extension
 from Cython.Build import cythonize
 
-ext = Extension("memviews",
-                ["memviews.pyx"])
+ext = Extension("carrays",
+                ["carrays.pyx"])
 
-setup(name="memviews",
+setup(name="carrays",
       ext_modules=cythonize(ext))

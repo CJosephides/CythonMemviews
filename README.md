@@ -66,3 +66,11 @@ double[:, :, ::1]
 ```
 
 for a three-dimensional array.
+
+## C arrays
+
+The example `identity_2d_long` shows how we can dynamically allocate space for a two-dimensional matrix on the heap.
+
+**Note: unlike modern C, we have to explicitly cast the void pointer return by malloc to the type that we are assigning.**
+
+Be very careful with the imports and cimports.
