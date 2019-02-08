@@ -26,3 +26,16 @@ na.sum()
 ```
 
 for some, very strange, reason.
+
+### Trading safety for performance
+
+The `cython.boundscheck` and `cython.wraparound` decorators respectively absolve Cython from doing explicit checks on
+array bounds and disable negative indexing. We can also set these compiler directives for the entire module through the
+header:
+
+```
+#cython: boundscheck=False
+#cython:wraparound=False
+```
+
+or globally enable these at compile time through the `--directive` flag.
