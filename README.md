@@ -86,3 +86,9 @@ The [official Cython documents](https://cython.readthedocs.io/en/latest/src/tuto
 ### Note on usage
 
 The more typical case is tu use numpy arrays to manage data (and memory!) and the use the basic features of typed memoryviews to efficiently access and modify these numpy arrays from cython.
+
+## Spectral Norm of a matrix
+
+This is a longer example showing how to use C-optimized routines in Cython for a common linear algebra calculation. Most of this code is taken from "Cython: A guide for python programmers."
+
+`spectral_norm.py` consists of the pure-python implementation.
