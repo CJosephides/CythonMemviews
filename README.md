@@ -76,3 +76,13 @@ The example `identity_2d_long` shows how we can dynamically allocate space for a
 Be very careful with the imports and cimports. Also, don't forget to type the index cdefs.
 
 The current implementation, even with disabled check directives, is not quite as fast as numpy (1.4 vs 1.8 usec). I'm not sure why.
+
+### Automatic deallocation of memory
+
+I couldn't get this to work. Attempting to `set_array_base` seg faults.
+
+The [official Cython documents](https://cython.readthedocs.io/en/latest/src/tutorial/memory_allocation.html) suggest that we use the C-API functions directly instead of the low-level C functions.
+
+### Note on usage
+
+The more typical case is tu use numpy arrays to manage data (and memory!) and the use the basic features of typed memoryviews to efficiently access and modify these numpy arrays from cython.
