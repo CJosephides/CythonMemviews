@@ -92,3 +92,27 @@ The more typical case is tu use numpy arrays to manage data (and memory!) and th
 This is a longer example showing how to use C-optimized routines in Cython for a common linear algebra calculation. Most of this code is taken from "Cython: A guide for python programmers."
 
 `spectral_norm.py` consists of the pure-python implementation.
+
+In IPython, use `%run -p ./spectral_norm.py 300` to see a profiled run. Our code spends >90% of its time in `A`, `A_times_u`, and `At_times_u`.
+
+Alternatively, from the shell:
+
+`python3 -m cProfile -s tottime spectral_norm.py 300 | less`
+
+should show the same thing.
+
+On my machine, the pure python implementation takes 1.265 seconds.
+
+### No-frill Cythonize
+
+Merely cythonizing the pure-python implementation, as in `cspectral_norm.pyx` and set up in `setup_cspectral_norm.py` results in a nearly three-fold speed increase (0.58 seconds)!
+
+### Type information
+
+We modified the `A` function by adding static type information. We also inlined the function.
+After compiling and looking at the annotation file, we saw that the `return` line was still yellow.
+The reason for this was the division-by-zero precaution. We turned that off by 
+decorating the function with `cdivision(True)`, which tells the compiler not to worry
+about this eventuality.
+
+The total runtime is now 0.134 seconds. This is an order of magnitude faster than pure python and about four times faster than our naive cython code.
