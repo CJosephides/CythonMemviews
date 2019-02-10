@@ -150,3 +150,36 @@ We are already using the efficient `array.array` through the buffer protocol, so
 A nice feedback loop when working with Cython is to annotate the generated C code by passing `annotate=True` to the
 `cythonize` call in the setup file. We then inspect the highlighted lines and take steps to optimize them.
 We clear out the build, recompile, and repeat.
+
+## Parallelization
+
+We can paralellize loops like so:
+
+```
+from cython.parallel import prange
+
+cdef int i
+cdef int n = 30
+cdef int sum = 0
+
+for i in prange(n, nogil=True):
+    sum += i
+
+print(sum)
+```
+
+Example with a typed memoryview (e.g. a NumPy array):
+
+```
+from cython.parallel import prange
+
+def func(double[:] x, double alpha):
+    cdef Py_ssize_t i
+
+    for i in prange(x.shape[0]):
+        x[i] = alpha * x[i]
+```
+
+Refer to https://cython.readthedocs.io/en/latest/src/userguide/parallelism.html for more examples. 
+
+
